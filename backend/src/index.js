@@ -1,47 +1,42 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
-// const app=express();
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-
 import path from 'path';
 
-import authRoutes from '../routes/auth.route.js'
+import authRoutes from '../routes/auth.route.js';
 import messageRoute from "../routes/message.route.js";
 import { ConnectDB } from '../lib/db.js';
-import { app, server } from '../lib/socket.js';
+import { app, server } from '../lib/socket.js';  
 
-// app.get('/',(req,res)=>{
-//     res.send("Home is working")
-// })
-
+// Middlewares
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
 app.use(cors({
-    origin:"http://localhost:5173",
-    credentials:true
-}))
+    origin: "http://localhost:5173",
+    credentials: true
+}));
 
-app.use('/api/auth',authRoutes);
-app.use('/api/messages',messageRoute);
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/messages', messageRoute);
+
+const PORT = process.env.PORT || 8000;
+const __dirname = path.resolve();
+
+if (process.env.NODE_ENV === 'production') {
 
 
+    app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-const PORT=process.env.PORT||8000;
-const __dirname=path.resolve();
-
-if(process.env.NODE_ENV ==='production' ){
-    app.use(express.static(path.join(__dirname,"../frontend/dist")))
-
-    app.get("/*",(req,res)=>{
-        res.sendFile(path.join(__dirname,"../frontend","dist","index.html"));
-    })
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "../frontend/dist", "index.html"));
+    });
 }
 
-
 ConnectDB();
-server.listen(PORT,()=>{
-    console.log(`Server is listening to Port:${PORT}`);
-})
+server.listen(PORT, () => {
+    console.log(`Server is listening to Port: ${PORT}`);
+});
