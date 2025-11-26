@@ -23,6 +23,10 @@ Frontend: React, Fetch/Axios, Socket.IO-client
 Backend: Node.js, Express.js, MongoDB, Mongoose, JWT, bcrypt
 Real-Time: Socket.IO (WebSockets)
 
+🚀 Live Demo
+
+🔗 https://fullstack-chat-app-1a52.onrender.com
+
 🔧 Environment Variables
 Backend (.env)
 PORT=5000
